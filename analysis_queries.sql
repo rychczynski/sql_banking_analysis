@@ -28,23 +28,7 @@ GROUP BY loyalty_segment
 ORDER BY avg_credit_limit DESC;
 
 
--- 3. Does the total sum of all limits per client increase with the number of cards owned?
-WITH A3 AS 
-  (SELECT
-        client_id,
-        COUNT(*) AS n_of_cards,
-        SUM(CAST(REPLACE(credit_limit, '$', '') AS INTEGER)) AS total_limit_per_client
-    FROM cards_data
-    GROUP BY client_id)
-SELECT
-    n_of_cards,
-    ROUND(AVG(total_limit_per_client), 2) AS avg_total_limit
-FROM A3
-GROUP BY n_of_cards
-ORDER BY n_of_cards ASC;
-
-
--- 4. How many cards do not have a chip and what is their percentage of the total portfolio?
+-- 3. How many cards do not have a chip and what is their percentage of the total portfolio?
 SELECT
     SUM(CASE WHEN has_chip = 'YES' THEN 0 ELSE 1 END) AS cards_without_chips,
     COUNT(*) AS total_cards,
@@ -52,7 +36,7 @@ SELECT
 FROM cards_data;
 
 
--- 5. How many chip-enabled cards have appeared on the Dark Web?
+-- 4. How many chip-enabled cards have appeared on the Dark Web?
 SELECT
     has_chip,
     COUNT(*) AS n_of_leaked_cards
